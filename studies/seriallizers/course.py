@@ -1,7 +1,9 @@
 from rest_framework import serializers
+from rest_framework.relations import SlugRelatedField
 
 from studies.models import Course
 from studies.seriallizers.lesson import LessonSerializer
+from users.models import User
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -12,6 +14,8 @@ class CourseSerializer(serializers.ModelSerializer):
     lessons_count = serializers.IntegerField(source='lesson_set.all.count', required=False)
     # поле для вывода самих уроков(словарь с полями урока), относящихся к курсу
     lessons = LessonSerializer(source='lesson_set.all', many=True, required=False)
+
+    owner = SlugRelatedField(slug_field='first_name', queryset=User.objects.all())
 
     class Meta:
         model = Course
