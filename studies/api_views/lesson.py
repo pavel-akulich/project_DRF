@@ -1,6 +1,7 @@
 from rest_framework import generics
 
 from studies.models import Lesson
+from studies.paginators import LessonPaginator
 from studies.permissions import IsOwner, IsModerator, IsNotModerator, IsSuperUser
 from studies.seriallizers.lesson import LessonSerializer
 
@@ -25,6 +26,7 @@ class LessonListAPIView(generics.ListAPIView):
     """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+    pagination_class = LessonPaginator
 
     def get_queryset(self):
         """

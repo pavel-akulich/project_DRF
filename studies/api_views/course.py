@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from studies.models import Course
+from studies.paginators import CoursePaginator
 from studies.permissions import IsNotModerator, IsOwner, IsModerator, IsSuperUser
 from studies.seriallizers.course import CourseSerializer
 
@@ -12,6 +13,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     """
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
+    pagination_class = CoursePaginator
 
     def get_permissions(self):
         """

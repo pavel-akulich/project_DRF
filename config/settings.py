@@ -51,6 +51,7 @@ USER_APPS = [
     'users',
     'studies',
     'payments',
+    'subscription',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + USER_APPS
@@ -155,6 +156,6 @@ REST_FRAMEWORK = {
 
 # Настройки срока действия токенов
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=2500),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
 }
