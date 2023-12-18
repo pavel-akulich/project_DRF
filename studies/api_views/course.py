@@ -5,6 +5,8 @@ from studies.models import Course
 from studies.paginators import CoursePaginator
 from studies.permissions import IsNotModerator, IsOwner, IsModerator, IsSuperUser
 from studies.seriallizers.course import CourseSerializer
+from studies.tasks import update_material_mail
+from subscription.models import SubscriptionOnUpdate
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -44,6 +46,13 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """
-        Запись владельца при создании курса
+        Записывает владельца при создании курса и обновляет курс
         """
         serializer.save(owner=self.request.user)
+
+        pk = self.kwargs.get('pk')
+        course = Course.objects.get(pk=pk)
+        subscription = SubscriptionOnUpdate.objects.filter(course=course, is_subscribed=True)
+        email = list(subscription.values_list('user__email', flat=True))
+
+        update_material_mail.delay(email)
