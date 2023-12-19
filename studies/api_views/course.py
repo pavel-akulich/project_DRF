@@ -1,3 +1,6 @@
+import datetime
+
+from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -54,5 +57,6 @@ class CourseViewSet(viewsets.ModelViewSet):
         course = Course.objects.get(pk=pk)
         subscription = SubscriptionOnUpdate.objects.filter(course=course, is_subscribed=True)
         email = list(subscription.values_list('user__email', flat=True))
-
-        update_material_mail.delay(email)
+        time_for_notice = datetime.datetime.now(timezone.utc) - datetime.timedelta(hours=4)
+        if Course.updated_at < time_for_notice:
+            update_material_mail.delay(email)
